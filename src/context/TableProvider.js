@@ -5,6 +5,11 @@ import requestApi from '../services/requestApi';
 
 const TableProvider = ({ children }) => {
   const [data, setData] = useState([]);
+  const [userTyping, setUserTyping] = useState({
+    filters: {
+      filterByName: { name: '' },
+    },
+  });
 
   const fetchPlanets = async () => {
     try {
@@ -15,12 +20,22 @@ const TableProvider = ({ children }) => {
     }
   };
 
+  const handleChange = (event) => {
+    const { target: { value } } = event;
+    setUserTyping({
+      filters: {
+        ...userTyping.filters,
+        filterByName: { name: value },
+      },
+    });
+  };
+
   useEffect(() => {
     fetchPlanets();
   }, []);
 
   return (
-    <TableContext.Provider value={ { data } }>
+    <TableContext.Provider value={ { data, userTyping, handleChange } }>
       { children }
     </TableContext.Provider>
   );
