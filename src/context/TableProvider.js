@@ -8,7 +8,14 @@ const TableProvider = ({ children }) => {
   const [userTyping, setUserTyping] = useState({
     filters: {
       filterByName: { name: '' },
+      filterByNumericValues: [],
     },
+  });
+
+  const [dropdown, setDropdown] = useState({
+    column: 'population',
+    comparison: 'maior que',
+    value: '100000',
   });
 
   const fetchPlanets = async () => {
@@ -21,11 +28,35 @@ const TableProvider = ({ children }) => {
   };
 
   const handleChange = (event) => {
-    const { target: { value } } = event;
+    const {
+      target: { value },
+    } = event;
     setUserTyping({
       filters: {
         ...userTyping.filters,
         filterByName: { name: value },
+      },
+    });
+  };
+
+  const handleDropdownChange = (event) => {
+    const {
+      target: { id, value },
+    } = event;
+    setDropdown({
+      ...dropdown,
+      [id]: value,
+    });
+  };
+
+  const filterDropdown = () => {
+    setUserTyping({
+      filters: {
+        ...userTyping.filters,
+        filterByNumericValues: [
+          ...userTyping.filters.filterByNumericValues,
+          dropdown,
+        ],
       },
     });
   };
@@ -35,8 +66,18 @@ const TableProvider = ({ children }) => {
   }, []);
 
   return (
-    <TableContext.Provider value={ { data, userTyping, handleChange } }>
-      { children }
+    <TableContext.Provider
+      value={ {
+        data,
+        userTyping,
+        dropdown,
+        handleChange,
+        handleDropdownChange,
+        filterDropdown,
+        setDropdown,
+      } }
+    >
+      {children}
     </TableContext.Provider>
   );
 };
