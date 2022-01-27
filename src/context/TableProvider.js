@@ -15,7 +15,7 @@ const TableProvider = ({ children }) => {
   const [dropdown, setDropdown] = useState({
     column: 'population',
     comparison: 'maior que',
-    value: '100000',
+    value: '0',
   });
 
   const fetchPlanets = async () => {
@@ -43,6 +43,7 @@ const TableProvider = ({ children }) => {
     const {
       target: { id, value },
     } = event;
+    // console.log(id, value);
     setDropdown({
       ...dropdown,
       [id]: value,
@@ -50,6 +51,7 @@ const TableProvider = ({ children }) => {
   };
 
   const filterDropdown = () => {
+    // console.log('TESTE', dropdown);
     setUserTyping({
       filters: {
         ...userTyping.filters,

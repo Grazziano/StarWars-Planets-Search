@@ -2,6 +2,16 @@ import React, { useContext } from 'react';
 import TableContext from '../../context/TableContext';
 import './Table.css';
 
+const columnFilterOptions = [
+  { value: 'population', name: 'population' },
+  { value: 'orbital_period', name: 'orbital_period' },
+  { value: 'diameter', name: 'diameter' },
+  { value: 'rotation_period', name: 'rotation_period' },
+  { value: 'surface_water', name: 'surface_water' },
+];
+
+const comparisonFilterOptions = ['maior que', 'menor que', 'igual a'];
+
 const Table = () => {
   const {
     data,
@@ -15,22 +25,13 @@ const Table = () => {
   const { name } = userTyping.filters.filterByName;
   const filterPlanets = data.filter((planet) => planet.name.includes(name));
 
-  const columnFilterOptions = [
-    { value: 'population', name: 'Population' },
-    { value: 'orbital_period', name: 'Orbital Period' },
-    { value: 'diameter', name: 'Diameter' },
-    { value: 'rotation_period', name: 'Rotation Period' },
-    { value: 'surface_water', name: 'Surface Water' },
-  ];
-
-  const comparisonFilterOptions = ['maior que', 'menor que', 'igual a'];
-
   const { column, comparison, value } = dropdown;
 
   const multipleFilter = filterPlanets.filter((planet) => {
     const { filterByNumericValues } = userTyping.filters;
 
     if (filterByNumericValues.length === 0) return true;
+    // console.log(filterByNumericValues);
 
     const newPlanet = Number(planet[column]);
     const newValue = Number(value);
@@ -40,6 +41,8 @@ const Table = () => {
       'menor que': newPlanet < newValue,
       'igual a': newPlanet === newValue,
     };
+
+    // console.log(filters[comparison]);
 
     return filters[comparison];
   });
@@ -59,7 +62,7 @@ const Table = () => {
       <form action="">
         <select
           name=""
-          id="columnFilter"
+          id="column"
           data-testid="column-filter"
           onChange={ handleDropdownChange }
         >
@@ -72,7 +75,7 @@ const Table = () => {
 
         <select
           name=""
-          id="comparisonFilter"
+          id="comparison"
           data-testid="comparison-filter"
           onChange={ handleDropdownChange }
         >
@@ -86,8 +89,9 @@ const Table = () => {
         <input
           type="number"
           name=""
-          id="valueFilter"
+          id="value"
           data-testid="value-filter"
+          defaultValue={ 0 }
           onChange={ handleDropdownChange }
         />
 
