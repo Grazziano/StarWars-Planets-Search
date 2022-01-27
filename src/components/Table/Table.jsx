@@ -3,11 +3,7 @@ import TableContext from '../../context/TableContext';
 import './Table.css';
 
 const columnFilterOptions = [
-  { value: 'population', name: 'population' },
-  { value: 'orbital_period', name: 'orbital_period' },
-  { value: 'diameter', name: 'diameter' },
-  { value: 'rotation_period', name: 'rotation_period' },
-  { value: 'surface_water', name: 'surface_water' },
+  'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
 ];
 
 const comparisonFilterOptions = ['maior que', 'menor que', 'igual a'];
@@ -67,8 +63,8 @@ const Table = () => {
           onChange={ handleDropdownChange }
         >
           {
-            columnFilterOptions.map((option, index) => (
-              <option key={ index } value={ option.value }>{ option.name }</option>
+            columnFilterOptions.map((option) => (
+              <option key={ option } value={ option }>{ option }</option>
             ))
           }
         </select>
