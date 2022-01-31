@@ -67,8 +67,6 @@ const TableProvider = ({ children }) => {
     });
   };
 
-  // const handleColumnChange = ({ target }) => console.log(target.value);
-  // const handleOrderChange = ({ target }) => console.log(target.value);
   const handleColumnChange = ({ target }) => setColumn(target.value);
   const handleOrderChange = ({ target }) => setOrder(target.value);
   const handleTableOrder = () => {
