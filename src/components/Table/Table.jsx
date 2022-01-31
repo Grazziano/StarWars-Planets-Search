@@ -17,6 +17,7 @@ const Table = () => {
     handleDropdownChange,
     filterDropdown,
     dropdown,
+    removeFilters,
     handleColumnChange,
     handleOrderChange,
     handleTableOrder,
@@ -113,6 +114,29 @@ const Table = () => {
           Find
         </button>
       </form>
+
+      {
+        userTyping.filters.filterByNumericValues.map((filter, index) => (
+          <div key={ index } data-testid="filter">
+            <p>
+              Column:
+              {' '}
+              <span>{ filter.column }</span>
+            </p>
+            <p>
+              Comparison:
+              {' '}
+              <span>{ filter.comparison }</span>
+            </p>
+            <p>
+              Value:
+              {' '}
+              <span>{ filter.value }</span>
+            </p>
+            <button type="button" onClick={ () => removeFilters(index) }>X</button>
+          </div>
+        ))
+      }
 
       <select name="" id="" data-testid="column-sort" onChange={ handleColumnChange }>
         {

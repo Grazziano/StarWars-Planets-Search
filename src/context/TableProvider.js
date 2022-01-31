@@ -67,6 +67,19 @@ const TableProvider = ({ children }) => {
     });
   };
 
+  const removeFilters = (index) => {
+    setUserTyping(
+      {
+        filters: {
+          ...userTyping.filters,
+          filterByNumericValues: [
+            ...userTyping.filters.filterByNumericValues.filter((e, key) => key !== index),
+          ],
+        },
+      },
+    );
+  };
+
   const handleColumnChange = ({ target }) => setColumn(target.value);
   const handleOrderChange = ({ target }) => setOrder(target.value);
   const handleTableOrder = () => {
@@ -97,6 +110,7 @@ const TableProvider = ({ children }) => {
         handleDropdownChange,
         filterDropdown,
         setDropdown,
+        removeFilters,
         handleColumnChange,
         handleOrderChange,
         handleTableOrder,
