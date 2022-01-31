@@ -5,10 +5,14 @@ import requestApi from '../services/requestApi';
 
 const TableProvider = ({ children }) => {
   const [data, setData] = useState([]);
+  const [order, setOrder] = useState('ASC');
+  const [column, setColumn] = useState('name');
+
   const [userTyping, setUserTyping] = useState({
     filters: {
       filterByName: { name: '' },
       filterByNumericValues: [],
+      order: { column: 'name', sort: 'ASC' },
     },
   });
 
@@ -63,6 +67,23 @@ const TableProvider = ({ children }) => {
     });
   };
 
+  // const handleColumnChange = ({ target }) => console.log(target.value);
+  // const handleOrderChange = ({ target }) => console.log(target.value);
+  const handleColumnChange = ({ target }) => setColumn(target.value);
+  const handleOrderChange = ({ target }) => setOrder(target.value);
+  const handleTableOrder = () => {
+    console.log(column, order);
+    setUserTyping({
+      filters: {
+        ...userTyping.filters,
+        order: {
+          column,
+          sort: order,
+        },
+      },
+    });
+  };
+
   useEffect(() => {
     fetchPlanets();
   }, []);
@@ -73,10 +94,14 @@ const TableProvider = ({ children }) => {
         data,
         userTyping,
         dropdown,
+        column,
         handleChange,
         handleDropdownChange,
         filterDropdown,
         setDropdown,
+        handleColumnChange,
+        handleOrderChange,
+        handleTableOrder,
       } }
     >
       {children}

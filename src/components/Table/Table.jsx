@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import TableContext from '../../context/TableContext';
 import './Table.css';
+import TableHead from './TableHead';
 
 const columnFilterOptions = [
   'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
@@ -16,9 +17,13 @@ const Table = () => {
     handleDropdownChange,
     filterDropdown,
     dropdown,
+    handleColumnChange,
+    handleOrderChange,
+    handleTableOrder,
   } = useContext(TableContext);
 
-  const { name } = userTyping.filters.filterByName;
+  // const { name } = userTyping.filters.filterByName;
+  const { filterByName: { name }, order: { sort, column: col } } = userTyping.filters;
   const filterPlanets = data.filter((planet) => planet.name.includes(name));
 
   const { column, comparison, value } = dropdown;
@@ -41,7 +46,26 @@ const Table = () => {
     // console.log(filters[comparison]);
 
     return filters[comparison];
+  }).sort((planA, planB) => {
+    const op = { numeric: true };
+    if (sort === 'ASC') {
+      return new Intl.Collator(undefined, op).compare(planA[col], planB[col]);
+    }
+    if (sort === 'DESC') {
+      return new Intl.Collator(undefined, op).compare(planB[col], planA[col]);
+    }
+    return 0;
   });
+
+  // console.log(multipleFilter.sort((a, b) => {
+  //   if (a[column] < b[column]) {
+  //     return -1;
+  //   }
+  //   if (a[column] > b[column]) {
+  //     return 1;
+  //   }
+  //   return 0;
+  // }));
 
   return (
     <>
@@ -100,26 +124,60 @@ const Table = () => {
         </button>
       </form>
 
+      <select name="" id="" data-testid="column-sort" onChange={ handleColumnChange }>
+        {
+          data.map((planet, index) => {
+            const plan = Object.keys(planet)
+              .filter((planetName) => planetName !== 'residents')[index];
+            // console.log(plan);
+            return <option key={ index } value={ plan }>{ plan }</option>;
+          })
+        }
+      </select>
+
+      <label htmlFor="ASC">
+        ASC
+        <input
+          type="radio"
+          data-testid="column-sort-input-asc"
+          value="ASC"
+          id="ASC"
+          name="radio-order"
+          onChange={ handleOrderChange }
+        />
+      </label>
+      <label htmlFor="DESC">
+        DESC
+        <input
+          type="radio"
+          data-testid="column-sort-input-desc"
+          value="DESC"
+          id="DESC"
+          name="radio-order"
+          onChange={ handleOrderChange }
+        />
+      </label>
+
+      <button
+        type="button"
+        data-testid="column-sort-button"
+        onClick={ handleTableOrder }
+      >
+        Order
+      </button>
+
       <table className="Table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Rotation Period</th>
-            <th>Orbital Period</th>
-            <th>Diameter</th>
-            <th>Climate</th>
-            <th>Gravity</th>
-            <th>Terrain</th>
-            <th>Surface Water</th>
-            <th>Population</th>
-            <th>Films</th>
-            <th>Created</th>
-            <th>Edited</th>
-            <th>Url</th>
-          </tr>
-        </thead>
+        <TableHead />
         <tbody>
-          {
+          {multipleFilter.map((planet, key) => (
+            <tr key={ key }>
+              <td data-testid="planet-name">{ planet.name }</td>
+              {
+                Object.keys(planet).slice(1).map((k) => <td key={ k }>{ planet[k] }</td>)
+              }
+            </tr>
+          ))}
+          {/* {
             multipleFilter.map((planet, index) => (
               <tr key={ `${planet}-${index}` }>
                 {
@@ -131,7 +189,7 @@ const Table = () => {
                 }
               </tr>
             ))
-          }
+          } */}
           {/* {
             filterPlanets.map((planet, index) => (
               <tr key={ index }>
